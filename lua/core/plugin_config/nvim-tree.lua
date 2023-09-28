@@ -22,7 +22,7 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'J', api.node.navigate.sibling.last, opts('Last Sibling'))
   vim.keymap.set('n', 'K', api.node.navigate.sibling.first, opts('Previous Sibling'))
   vim.keymap.set('n', 'r', api.fs.rename, opts('Rename'))
-  vim.keymap.set('n', 'R', api.tree.reload, opts('Refresh'))
+  vim.keymap.set('n', 're', api.tree.reload, opts('Refresh'))
   vim.keymap.set('n', 'df', api.fs.remove, opts('Delete'))
 
   vim.keymap.set('n', 'x', api.fs.cut, opts('Cut'))
