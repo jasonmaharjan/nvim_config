@@ -1,6 +1,16 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
+-- Git configuration
+   local git_config = {
+      enable = true,   -- Enable Git integration
+      ignore = false,  -- Do not ignore Git files
+      timeout = 500,   -- Set the timeout for Git operations (in milliseconds)
+   }
+
 -- Nvim Tree
 local function on_attach(bufnr)
   local api = require('nvim-tree.api')
@@ -9,10 +19,8 @@ local function on_attach(bufnr)
     return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
   end
 
-  -- remove_keymaps = true
-  -- view.mappings.custom_only = true
-
   vim.keymap.set("n", "<c-n>", ":NvimTreeFindFileToggle<CR>")
+  vim.g.nvim_tree_git_hl_files = 1
   vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
   vim.keymap.set('n', 'o', api.node.open.edit, opts('Open'))
   vim.keymap.set('n', 'O', api.node.open.vertical, opts('Open: Vertical Split'))
@@ -43,4 +51,5 @@ end
 
 require("nvim-tree").setup({
   on_attach = on_attach,
+  git = git_config,
 })
