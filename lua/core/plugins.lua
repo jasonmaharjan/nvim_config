@@ -21,12 +21,13 @@ return require('packer').startup(function(use)
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-nvim-lsp'
   use 'tpope/vim-commentary'
+  use 'nvimtools/none-ls.nvim'
   use {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
   }
-
+  use("MunifTanjim/prettier.nvim")
   use({
 	"L3MON4D3/LuaSnip",
 	tag = "v2.*",
