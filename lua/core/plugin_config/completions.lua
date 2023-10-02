@@ -1,11 +1,12 @@
 local cmp = require('cmp')
 local cmp_select_opts = { behavior = cmp.SelectBehavior.Select }
-
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 require("luasnip.loaders.from_vscode").lazy_load()
 
 cmp.setup({
     sources = {
         { name = 'nvim_lsp' },
+        { name = 'nvim-autopairs' },
     },
     mapping = {
         ['<Tab>'] = cmp.mapping.confirm({ select = true }),
@@ -54,4 +55,13 @@ cmp.setup({
             return item
         end,
     },
+    completion = {
+        completeopt = 'menu, menuone, noselect',
+    }
 })
+
+-- If you want insert `(` after select function or method item
+cmp.event:on(
+    'confirm_done',
+    cmp_autopairs.on_confirm_done()
+)

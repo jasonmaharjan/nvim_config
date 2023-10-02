@@ -7,6 +7,7 @@ require('nvim-treesitter.configs').setup {
   auto_install = true,
   highlight = {
     enable = true,
+    use_languagetree = true,
   },
   context_commentstring = {
         enable = true,

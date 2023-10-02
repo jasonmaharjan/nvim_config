@@ -106,6 +106,7 @@ prettier.setup({
         trailing_comma = "es5",
         use_tabs = false,
     },
+    autoprettier = true,
 })
 
 lspconfig.jsonls.setup({
