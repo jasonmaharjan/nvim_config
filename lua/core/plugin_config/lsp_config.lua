@@ -6,22 +6,20 @@ local lspconfig = require('lspconfig')
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+local on_attach = function(_, _)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
 
-local on_attach = function(_,_)
-  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
-
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, {})
-  vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, {})
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, {})
+    vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, {})
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
 end
 
 mason.setup()
 mason_configs.setup({})
 
 local get_servers = mason_configs.get_installed_servers
-
 for _, server_name in ipairs(get_servers()) do
     lspconfig[server_name].setup({
         capabilities = capabilities,
@@ -33,6 +31,7 @@ local servers = { "tsserver" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup({
         on_attach = on_attach,
+        filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
         capabilities = capabilities,
     })
 end
@@ -164,4 +163,3 @@ lspconfig.cssls.setup({
 --     },
 --   }
 -- }
-

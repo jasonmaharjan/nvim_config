@@ -16,13 +16,13 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftround = true
 vim.opt.expandtab = true
-
+vim.opt.breakindent = true
 vim.opt.smartindent = true
 vim.opt.wrap = false
 
 vim.opt.incsearch = true
 
-vim.keymap.set("i", "kj", "<Esc>", {noremap =true})
+vim.keymap.set("i", "kj", "<Esc>", { noremap = true })
 
 -- move lines vertically
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
