@@ -109,6 +109,7 @@ prettier.setup({
 })
 
 lspconfig.jsonls.setup({
+    on_attach = on_attach,
     cmd = { "vscode-json-languageserver", "--stdio" },
     filetypes = { "json" },
     capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities),
@@ -131,6 +132,29 @@ lspconfig.eslint.setup({
 
 lspconfig.cssls.setup({
     on_attach = on_attach,
+})
+
+-- remove annoying python linting
+lspconfig.pylsp.setup({
+    on_attach = on_attach,
+    fileTypes = { 'python' },
+    settings = {
+        configurationSources = { "flake8" },
+        formatCommand = { "black" },
+        pylsp = {
+            plugins = {
+                pyflakes = { enabled = true },
+                -- pylint = {args = {'--ignore=E501,E231', '-'}, enabled=true, debounce=200},
+                pylsp_mypy = { enabled = false },
+                pycodestyle = {
+                    enabled = true,
+                    ignore = { 'E501', 'E231', 'W291', 'E302', 'E305', },
+                    maxLineLength = 120
+                },
+                yapf = { enabled = true }
+            }
+        }
+    }
 })
 
 -- require("typescript").setup({
