@@ -19,7 +19,7 @@ return require('packer').startup(function(use)
     use 'nvim-tree/nvim-web-devicons'
     use 'nvim-lualine/lualine.nvim'
     use 'nvim-treesitter/nvim-treesitter'
-    use 'treesitter-context'
+    use 'romgrk/nvim-treesitter-context'
     use 'hrsh7th/nvim-cmp'
     use 'hrsh7th/cmp-nvim-lsp'
     use 'terryma/vim-multiple-cursors'
@@ -50,6 +50,8 @@ return require('packer').startup(function(use)
         tag = '0.1.0',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
+    use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+    use 'theHamsta/nvim-dap-virtual-text'
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if packer_bootstrap then
