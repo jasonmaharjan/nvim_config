@@ -50,8 +50,13 @@ return require('packer').startup(function(use)
         tag = '0.1.0',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
-    use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+    use { "rcarriga/nvim-dap-ui", requires = { "mfussenegger/nvim-dap" } }
     use 'theHamsta/nvim-dap-virtual-text'
+    use {
+        'lewis6991/gitsigns.nvim',
+        requires = {'nvim-lua/plenary.nvim'}
+    }
+    use "sindrets/diffview.nvim"
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if packer_bootstrap then
