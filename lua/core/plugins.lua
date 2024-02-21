@@ -54,7 +54,7 @@ return require('packer').startup(function(use)
     use 'theHamsta/nvim-dap-virtual-text'
     use {
         'lewis6991/gitsigns.nvim',
-        requires = {'nvim-lua/plenary.nvim'}
+        requires = { 'nvim-lua/plenary.nvim' }
     }
     use "sindrets/diffview.nvim"
     -- Automatically set up your configuration after cloning packer.nvim
