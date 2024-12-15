@@ -27,7 +27,7 @@ for _, server_name in ipairs(get_servers()) do
     })
 end
 
-local servers = { "tsserver" }
+local servers = { "ts_ls" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup({
         on_attach = on_attach,

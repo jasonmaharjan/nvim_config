@@ -12,9 +12,13 @@ end
 local packer_bootstrap = ensure_packer()
 
 return require('packer').startup(function(use)
+    -- tab-like bar navigation
+    use 'nvim-tree/nvim-web-devicons' -- OPTIONAL: for file icons
+    use 'romgrk/barbar.nvim'
+
     use 'wbthomason/packer.nvim'
-    -- use 'ellisonleao/gruvbox.nvim'
-    use { "catppuccin/nvim", as = "catppuccin" }
+    use 'ellisonleao/gruvbox.nvim'
+    -- use { "catppuccin/nvim", as = "catppuccin" }
     use 'nvim-tree/nvim-tree.lua'
     use 'nvim-tree/nvim-web-devicons'
     use 'nvim-lualine/lualine.nvim'
@@ -50,8 +54,9 @@ return require('packer').startup(function(use)
         tag = '0.1.0',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
-    use { "rcarriga/nvim-dap-ui", requires = { "mfussenegger/nvim-dap" } }
-    use 'theHamsta/nvim-dap-virtual-text'
+    -- use { "rcarriga/nvim-dap-ui", requires = { "mfussenegger/nvim-dap" } }
+    -- use 'theHamsta/nvim-dap-virtual-text'
+    -- use 'nvim-nio'
     use {
         'lewis6991/gitsigns.nvim',
         requires = { 'nvim-lua/plenary.nvim' }
