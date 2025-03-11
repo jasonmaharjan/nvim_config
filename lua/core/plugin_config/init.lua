@@ -1,5 +1,4 @@
 require("core.plugin_config.gruvbox")
--- require("core.plugin_config.catpuccin")
 require("core.plugin_config.lualine")
 require("core.plugin_config.harpoon")
 require("core.plugin_config.nvim-tree")
