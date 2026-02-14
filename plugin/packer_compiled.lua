@@ -94,6 +94,11 @@ _G.packer_plugins = {
     path = "/home/jason/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
     url = "https://github.com/saadparwaiz1/cmp_luasnip"
   },
+  ["conform.nvim"] = {
+    loaded = true,
+    path = "/home/jason/.local/share/nvim/site/pack/packer/start/conform.nvim",
+    url = "https://github.com/stevearc/conform.nvim"
+  },
   ["diffview.nvim"] = {
     loaded = true,
     path = "/home/jason/.local/share/nvim/site/pack/packer/start/diffview.nvim",
@@ -214,14 +219,14 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: nvim-autopairs
-time([[Config for nvim-autopairs]], true)
-try_loadstring("\27LJ\2\n@\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0", "config", "nvim-autopairs")
-time([[Config for nvim-autopairs]], false)
 -- Config for: kanagawa.nvim
 time([[Config for kanagawa.nvim]], true)
 try_loadstring("\27LJ\2\n|\0\0\3\0\a\0\v6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\0016\0\4\0009\0\5\0'\2\6\0B\0\2\1K\0\1\0\30colorscheme kanagawa-wave\bcmd\bvim\1\0\1\ntheme\vdragon\nsetup\rkanagawa\frequire\0", "config", "kanagawa.nvim")
 time([[Config for kanagawa.nvim]], false)
+-- Config for: nvim-autopairs
+time([[Config for nvim-autopairs]], true)
+try_loadstring("\27LJ\2\n@\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0", "config", "nvim-autopairs")
+time([[Config for nvim-autopairs]], false)
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then
