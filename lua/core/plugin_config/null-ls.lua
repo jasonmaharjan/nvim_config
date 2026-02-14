@@ -8,7 +8,7 @@ local async = event == "BufWritePost"
 null_ls.setup({
     sources = {
         null_ls.builtins.formatting.stylua,
-        null_ls.builtins.formatting.rustywind,
+        -- null_ls.builtins.formatting.rustywind, -- rustywind sorting Tailwind CSS classnames in files, ignore to avoid
     },
     filetypes = {
         "css",

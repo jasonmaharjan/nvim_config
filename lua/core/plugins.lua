@@ -17,11 +17,20 @@ return require('packer').startup(function(use)
     use 'romgrk/barbar.nvim'
 
     use 'wbthomason/packer.nvim'
-    use 'ellisonleao/gruvbox.nvim'
+    -- use 'ellisonleao/gruvbox.nvim'
     -- use { "catppuccin/nvim", as = "catppuccin" }
     use 'nvim-tree/nvim-tree.lua'
-    use 'nvim-tree/nvim-web-devicons'
+    use({
+        "rebelot/kanagawa.nvim",
+        config = function()
+            require("kanagawa").setup({
+                theme = "dragon",
+            })
+            vim.cmd("colorscheme kanagawa-wave")
+        end,
+    })
     use 'nvim-lualine/lualine.nvim'
+
     use 'nvim-treesitter/nvim-treesitter'
     use 'romgrk/nvim-treesitter-context'
     use 'hrsh7th/nvim-cmp'
@@ -34,6 +43,8 @@ return require('packer').startup(function(use)
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
         "neovim/nvim-lspconfig",
+        -- conform.nvim for python auto formatting
+        use 'stevearc/conform.nvim'
     }
     use("MunifTanjim/prettier.nvim")
     use({

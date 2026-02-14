@@ -1,189 +1,164 @@
-local mason = require("mason")
-local mason_configs = require("mason-lspconfig")
+-- ========================
+-- LSP Setup for Neovim 0.11+
+-- ========================
 
-local lspconfig = require('lspconfig')
-
+-- CMP capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-local on_attach = function(_, _)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
-    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
+-- On attach keymaps
+local on_attach = function(_, bufnr)
+    local opts = { noremap = true, silent = true, buffer = bufnr }
 
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, {})
-    vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, {})
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
 end
+
+-- ========================
+-- Mason Setup
+-- ========================
+local mason = require("mason")
+local mason_lsp = require("mason-lspconfig")
+local lspconfig = require("lspconfig")
 
 mason.setup()
-mason_configs.setup({})
+mason_lsp.setup({})
 
-local get_servers = mason_configs.get_installed_servers
-for _, server_name in ipairs(get_servers()) do
-    lspconfig[server_name].setup({
-        capabilities = capabilities,
-        on_attach = on_attach,
-    })
+-- Auto-setup installed Mason LSP servers
+local installed_servers = mason_lsp.get_installed_servers()
+for _, server_name in ipairs(installed_servers) do
+    if lspconfig[server_name] then
+        lspconfig[server_name].setup({
+            capabilities = capabilities,
+            on_attach = on_attach,
+        })
+    end
 end
 
-local servers = { "ts_ls" }
-for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup({
+-- ========================
+-- Manual servers
+-- ========================
+
+-- Typescript
+if lspconfig.ts_ls then
+    lspconfig.ts_ls.setup({
         on_attach = on_attach,
         filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
         capabilities = capabilities,
     })
 end
 
--- Make runtime files discoverable to the server
+-- Lua LS
 local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
-lspconfig.lua_ls.setup({
-    on_attach = on_attach,
-    capabilities = capabilities,
-    settings = {
-        Lua = {
-            runtime = {
-                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-                version = "LuaJIT",
-                -- Setup your lua path
-                path = runtime_path,
-            },
-            diagnostics = {
-                -- Get the language server to recognize the `vim` global
-                globals = { "vim", "use" },
-            },
-            workspace = {
-                -- Make the server aware of Neovim runtime files
-                library = vim.api.nvim_get_runtime_file("", true),
-                checkThirdParty = false,
-            },
-            -- Do not send telemetry data containing a randomized but unique identifier
-            telemetry = {
-                enable = false,
-            },
-        },
-    },
-})
 
-local prettier = require("prettier")
-prettier.setup({
-    ["null-ls"] = {
+if lspconfig.lua_ls then
+    lspconfig.lua_ls.setup({
         on_attach = on_attach,
-        condition = function()
-            return prettier.config_exists({
-                check_package_json = true,
-            })
-        end,
-        runtime_condition = function()
-            return true
-        end,
-        timeout = 5000,
-    },
-    bin = "prettier",
-    filetypes = {
-        "css",
-        "graphql",
-        "html",
-        "javascript",
-        "javascriptreact",
-        "json",
-        "less",
-        "markdown",
-        "scss",
-        "typescript",
-        "typescriptreact",
-        "yaml",
-    },
-    cli_options = {
-        arrow_parens = "avoid",
-        print_width = 80,
-        semi = true,
-        tab_width = 4,
-        trailing_comma = "es5",
-        use_tabs = false,
-    },
-    autoprettier = true,
-})
-
-lspconfig.jsonls.setup({
-    on_attach = on_attach,
-    cmd = { "vscode-json-languageserver", "--stdio" },
-    filetypes = { "json" },
-    capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities),
-    settings = {
-        json = {
-            format = {
-                enable = false,
+        capabilities = capabilities,
+        settings = {
+            Lua = {
+                runtime = { version = "LuaJIT", path = runtime_path },
+                diagnostics = { globals = { "vim", "use" } },
+                workspace = { library = vim.api.nvim_get_runtime_file("", true), checkThirdParty = false },
+                telemetry = { enable = false },
             },
-            validate = { enable = true },
         },
-    },
-})
+    })
+end
 
-lspconfig.eslint.setup({
-    on_attach = function(client, bufnr)
-        client.server_capabilities.document_formatting = false
-        on_attach(_, bufnr)
-    end,
-})
+-- JSON LS
+if lspconfig.jsonls then
+    lspconfig.jsonls.setup({
+        on_attach = on_attach,
+        cmd = { "vscode-json-languageserver", "--stdio" },
+        filetypes = { "json" },
+        capabilities = capabilities,
+        settings = {
+            json = {
+                format = { enable = false },
+                validate = { enable = true },
+            },
+        },
+    })
+end
 
-lspconfig.cssls.setup({
-    on_attach = on_attach,
-})
+-- ESLint
+if lspconfig.eslint then
+    lspconfig.eslint.setup({
+        on_attach = function(client, bufnr)
+            client.server_capabilities.document_formatting = false
+            on_attach(client, bufnr)
+        end,
+    })
+end
 
--- remove annoying python linting
-lspconfig.pylsp.setup({
-    on_attach = on_attach,
-    fileTypes = { 'python' },
-    settings = {
-        configurationSources = { "flake8" },
-        formatCommand = { "black" },
-        pylsp = {
-            plugins = {
-                pyflakes = { enabled = true },
-                -- pylint = {args = {'--ignore=E501,E231', '-'}, enabled=true, debounce=200},
-                pylsp_mypy = { enabled = false },
-                pycodestyle = {
-                    enabled = true,
-                    ignore = { 'E501', 'E231', 'W291', 'E302', 'E305', },
-                    maxLineLength = 120
+-- CSS LS
+if lspconfig.cssls then
+    lspconfig.cssls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+    })
+end
+
+-- PyLSP
+if lspconfig.pylsp then
+    lspconfig.pylsp.setup({
+        on_attach = on_attach,
+        filetypes = { "python" },
+        capabilities = capabilities,
+        settings = {
+            configurationSources = { "flake8" },
+            formatCommand = { "black" },
+            pylsp = {
+                plugins = {
+                    pyflakes = { enabled = true },
+                    pylsp_mypy = { enabled = false },
+                    pycodestyle = {
+                        enabled = true,
+                        ignore = { "E501", "E231", "W291", "E302", "E305" },
+                        maxLineLength = 120,
+                    },
+                    yapf = { enabled = true },
                 },
-                yapf = { enabled = true }
-            }
-        }
-    }
-})
+            },
+        },
+    })
+end
 
--- require("typescript").setup({
--- 	disable_commands = false, -- prevent the plugin from creating Vim commands
--- 	debug = false, -- enable debug logging for commands
--- 	go_to_source_definition = {
--- 		fallback = true, -- fall back to standard LSP definition on failure
--- 	},
--- 	server = { -- pass options to lspconfig's setup method
--- 		on_attach = function(...)
--- 			on_attach(...)
--- 		end,
--- 	},
--- })
-
--- require("lspconfig").lua_ls.setup {
---   on_attach = on_attach,
---   capabilities = capabilities,
---   settings = {
---     Lua = {
---       diagnostics = {
---         globals = { "vim" },
---       },
---       workspace = {
---         library = {
---           [vim.fn.expand "$VIMRUNTIME/lua"] = true,
---           [vim.fn.stdpath "config" .. "/lua"] = true,
---         },
---       },
---     },
---   }
--- }
+-- ========================
+-- Prettier Setup
+-- ========================
+local ok, prettier = pcall(require, "prettier")
+if ok then
+    prettier.setup({
+        ["null-ls"] = {
+            on_attach = on_attach,
+            condition = function()
+                return prettier.config_exists({ check_package_json = true })
+            end,
+            runtime_condition = function() return true end,
+            timeout = 5000,
+        },
+        bin = "prettier",
+        filetypes = {
+            "css", "graphql", "html", "javascript", "javascriptreact",
+            "json", "less", "markdown", "scss", "typescript",
+            "typescriptreact", "yaml",
+        },
+        cli_options = {
+            arrow_parens = "avoid",
+            print_width = 80,
+            semi = true,
+            tab_width = 4,
+            trailing_comma = "es5",
+            use_tabs = false,
+        },
+        autoprettier = true,
+    })
+end
